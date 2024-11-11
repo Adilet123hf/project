@@ -5,7 +5,7 @@ from flask import request
 import os
 from main import *
 from connection import *
-from flask_sQLalchemy import sqlalchemy
+
 
 app = Flask(__name__)
 
