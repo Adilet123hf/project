@@ -6,7 +6,6 @@ import os
 from main import *
 from connection import *
 
-
 app = Flask(__name__)
 
 
@@ -30,16 +29,6 @@ def suit03():
 @app.route("/suit04.html")
 def suit04():
     return render_template("suit04.html")
-
-@app.route("/suit05.html")
-def suit05():
-    return render_template("suit05.html")
-
-@app.route("/suit06.html")
-def suit06():
-    return render_template("suit06.html")
-
-
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload_file(context=None):
