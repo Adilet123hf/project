@@ -4,12 +4,21 @@ from connection import *
 from models import User
 
 
+def clear_users_table(session):
+    """Функция для удаления всех записей из таблицы 'users'"""
+    confirm = input("Вы уверены, что хотите удалить все записи из таблицы 'users'? (y/n): ").strip().lower()
+    if confirm == 'y':
+        session.query(User).delete()
+        session.commit()
+        print("Все записи из таблицы 'users' были удалены.")
+    else:
+        print("Удаление отменено.")
+
 
 def is_login_unique(engine, login):
     with Session(engine) as session:
         query = select(User).filter_by(login=login)
         return session.scalars(query).first() is None
-
 
 
 def get_all_users(engine):
@@ -19,13 +28,11 @@ def get_all_users(engine):
         return users
 
 
-
 def available_users(engine):
     with Session(engine) as session:
         query = select(User.login)
         for user in session.scalars(query):
             yield user
-
 
 
 def main():
@@ -36,14 +43,14 @@ def main():
         print("\nMenu:")
         print("1. Add a new user")
         print("2. View all users")
-        print("3. Exit")
+        print("3. Clear all users from the table")
+        print("4. Exit")
 
         choice = input("Choose an option: ")
 
-        if choice == "1":  
+        if choice == "1":
             login = input("Login:\t")
 
-           
             if not is_login_unique(engine, login):
                 print(f"Error: Login '{login}' is already taken. Please choose a different login.")
                 continue
@@ -57,7 +64,7 @@ def main():
             create_entry([user], engine)
             print(f"User '{login}' added successfully!")
 
-        elif choice == "2":  
+        elif choice == "2":
             users = get_all_users(engine)
             if users:
                 print("\nRegistered Users:")
@@ -66,7 +73,11 @@ def main():
             else:
                 print("\nNo users registered yet.")
 
-        elif choice == "3":  
+        elif choice == "3":  # Option to clear all users
+            with Session(engine) as session:
+                clear_users_table(session)
+
+        elif choice == "4":
             print("Exiting the program.")
             break
 
